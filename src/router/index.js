@@ -54,7 +54,7 @@ export const constantRouterMap = [
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        meta: { title: '用户列表', icon: 'user' }
       }
     ]
   },
@@ -85,36 +85,59 @@ export const constantRouterMap = [
         ]
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/table/toarticle'),
+        path: 'comment',
+        name: 'comment',
+        component: () => import('@/views/table/articlecomment'),
         meta: { title: '文章评论管理', icon: 'tree' }
       }
     ]
   },
   
   {
-    path: '/form',
+    path: '/gathering',
     component: Layout,
+    meta: { title: '活动管理',icon: 'link' },
     children: [
       {
         path: 'index',
         name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        component: () => import('@/views/table/gathering'),
+        meta: { title: '活动列表', icon: 'form' }
+      },
+      {
+        path: 'usergath',
+        name: 'Form',
+        component: () => import('@/views/table/usergath'),
+        meta: { title: '报名人员管理', icon: 'form' }
       }
     ]
   },
   {
-    path: 'external-link',
+    path: '/spit',
     component: Layout,
+    meta: { title: '吐槽表白',icon: 'eye-open' },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/table/spit'),
+        meta: { title: '吐槽列表', icon: 'form' }
+      },
+      {
+        path: 'confession',
+        name: 'Form',
+        component: () => import('@/views/table/confession'),
+        meta: { title: '表名列表', icon: 'form' }
+      },
+      {
+        path: 'spitcomment',
+        name: 'Form',
+        component: () => import('@/views/table/spitcomment'),
+        meta: { title: '吐槽评论列表', icon: 'form' }
       }
     ]
   },
+  
 
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -45,11 +45,11 @@
 
   </el-table>
       <el-pagination
-      @size-change="fetchData"
-      @current-change="fetchData"
+      @size-change="handleChangeSize"
+      @current-change="handChangePage"
       :current-page="currentPage"
       :page-sizes="[5,10,20]"
-      :page-size="10"
+      :page-size="pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>  
@@ -148,6 +148,14 @@ export default {
     showDetail(index){
       this.pojo = index
       this.dialogDetailVisible = true
+    },
+    handChangePage(topage){
+      this.currentPage = topage
+      this.fetchData()
+    },
+    handleChangeSize(size){
+      this.pageSize = size
+      this.fetchData()
     }
     
   }

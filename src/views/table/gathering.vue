@@ -1,15 +1,22 @@
 <template>
 <div>
   <br>
-   <el-form :inline="true">
-         <el-form-item label="用户ID">
-<el-input v-model="searchMap.userid" placeholder="用户ID"></el-input></el-form-item>
-          <el-form-item label="标题">
-<el-input v-model="searchMap.title" placeholder="标题"></el-input></el-form-item>
-            <el-form-item label="发布日期" >
-            <el-date-picker  type="date" placeholder="选择开始日期" value-format="yyyy-MM-dd" v-model="searchMap.starttime_1" ></el-date-picker>
-            <el-date-picker  type="date" placeholder="选择截止日期" value-format="yyyy-MM-dd" v-model="searchMap.starttime_2" ></el-date-picker>
-          </el-form-item>
+  <el-form :inline="true">
+          <el-form-item label="活动名称">
+<el-input v-model="searchMap.name" placeholder="活动名称"></el-input></el-form-item>
+           <el-form-item label="主办方">
+<el-input v-model="searchMap.sponsor" placeholder="主办方"></el-input></el-form-item>
+         <el-form-item label="开始时间">
+<el-input v-model="searchMap.starttime" placeholder="开始时间"></el-input></el-form-item>
+          <el-form-item label="截止时间">
+<el-input v-model="searchMap.endtime" placeholder="截止时间"></el-input></el-form-item>
+          <el-form-item label="是否可见">
+    <el-select v-model="searchMap.state" placeholder="请选择">
+      <el-option label="可见" value="1"></el-option>
+      <el-option label="不可见" value="0"></el-option>
+    </el-select>
+  </el-form-item>
+         
     <el-button type="primary" @click="fetchData()">查询</el-button>
     <el-button type="primary" @click="handleEdit('')">新增</el-button>
   </el-form>
@@ -17,21 +24,21 @@
     :data="list"
     border
     style="width: 100%">
-          <el-table-column :show-overflow-tooltip="true" prop="id" label="ID" width="120"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="userid" label="用户ID" width="120"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="title" label="标题" width="120"></el-table-column>
-          <el-table-column label="文章详情" width="120">
+          <el-table-column :show-overflow-tooltip="true" prop="id" label="编号" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="name" label="活动名称" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="detail" label="详细说明" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="sponsor" label="主办方" width="80"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="image" label="活动图片" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="starttime" label="开始时间" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="endtime" label="截止时间" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="address" label="举办地点" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="enrolltime" label="报名截止" width="120"></el-table-column>
+          <el-table-column  label="是否可见" width="80">
             <template slot-scope="scope">
-             <el-button @click="showDetail(scope.row)" type="info" size="small">查看正文</el-button>
-           </template>
-            </el-table-column> 
-          <el-table-column  :show-overflow-tooltip="true" prop="image" label="文章封面" width="120"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="createtime" label="发表日期" width="140"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="updatetime" label="修改日期" width="140"></el-table-column>
-          <el-table-column prop="visits" label="浏览量" width="80"></el-table-column>
-          <el-table-column prop="thumbup" label="点赞数" width="80"></el-table-column>
-          <el-table-column prop="comment" label="评论数" width="80"></el-table-column>
-         
+            <p v-if="scope.row.state=='1'">可见</p>
+            <p v-else>不可见</p>
+            </template>
+          </el-table-column>
 
     <el-table-column
       
@@ -42,7 +49,6 @@
         <el-button @click="handleDelete(scope.row.id)" type="danger" size="mini">删除</el-button>
       </template>
     </el-table-column>
-
   </el-table>
       <el-pagination
       @size-change="handleChangeSize"
@@ -53,16 +59,17 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total">
     </el-pagination>  
-
   <el-dialog title="编辑" :visible.sync="dialogFormVisible">
     <el-form label-width="80px">
-       <el-form-item label="用户ID"><el-input v-model="pojo.userid"></el-input></el-form-item>
-        <el-form-item label="标题"><el-input v-model="pojo.title"></el-input></el-form-item>
-        <el-form-item label="文章正文"><el-input v-model="pojo.content"></el-input></el-form-item>
-        <el-form-item label="文章封面">
+        <el-form-item label="活动名称"><el-input v-model="pojo.name"></el-input></el-form-item>
+        <el-form-item label="活动形式">
+          <el-input type="textarea" :rows="3" v-model="pojo.detail"></el-input>
+        </el-form-item>
+        <el-form-item label="主办方"><el-input v-model="pojo.sponsor"></el-input></el-form-item>
+        <el-form-item label="活动图片">
           <el-upload
           class="avatar-uploader"
-          action="http://localhost:9002/article/uploadlogo"
+          action="http://localhost:9003/gathering/uploadlogo"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
@@ -70,26 +77,28 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         </el-form-item>
-         <el-form-item label="浏览量"><el-input v-model="pojo.visits"></el-input></el-form-item>
-        <el-form-item label="点赞数"><el-input v-model="pojo.thumbup"></el-input></el-form-item>
-        <el-form-item label="评论数"><el-input v-model="pojo.comment"></el-input></el-form-item>
-        <el-form-item label="审核状态"><el-input v-model="pojo.state"></el-input></el-form-item>
-         
+        <el-form-item label="开始时间"><el-input v-model="pojo.starttime"></el-input></el-form-item>
+        <el-form-item label="截止时间"><el-input v-model="pojo.endtime"></el-input></el-form-item>
+        <el-form-item label="举办地点"><el-input v-model="pojo.address"></el-input></el-form-item>
+        <el-form-item label="报名截止"><el-input v-model="pojo.enrolltime"></el-input></el-form-item>
+        <el-form-item label="是否可见">
+         <el-switch
+          v-model="pojo.state"
+          active-text="是"
+          inactive-text="否"
+          active-value="1"
+          inactive-value="0">
+         </el-switch>
+        </el-form-item>
+
         <el-button type="primary" @click="handleSave()">保存</el-button>
         <el-button @click="dialogFormVisible = false" >关闭</el-button>
     </el-form>
-     </el-dialog>
-  <!--详情窗口-->
-        <el-dialog title="详情" :visible.sync="dialogDetailVisible" >
-        <h3>{{pojo.title}}</h3>
-        <hr>
-        <div v-html='pojo.content'></div>       
-        </el-dialog>
+  </el-dialog>
 </div>
-
 </template>
 <script>
-import articleApi from '@/api/article'
+import gatheringApi from '@/api/gathering'
 export default {
   data() {
     return {
@@ -97,13 +106,11 @@ export default {
       total: 0, // 总记录数
       currentPage: 1, // 当前页
       pageSize: 10, // 每页大小
-      searchMap: {state:'1'}, // 查询条件
+      searchMap: {}, // 查询条件
       dialogFormVisible: false, // 编辑窗口是否可见
-      dialogDetailVisible: false,
       pojo: {}, // 编辑表单绑定的实体对象
       cityList: [], // 城市列表
-      id: '', // 当前用户修改的ID
-      imageUrl: ''
+      id: '' // 当前用户修改的ID
     }
   },
   created() {
@@ -111,15 +118,13 @@ export default {
   },
   methods: {
     fetchData() {
-      console.log(this.searchMap.starttime_1)
-      articleApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
+      gatheringApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
         this.list = response.data.rows
         this.total = response.data.total
       })
     },
     handleSave() {
-      this.pojo.image = this.imageUrl
-      articleApi.update(this.id, this.pojo).then(response => {
+      gatheringApi.update(this.id, this.pojo).then(response => {
         this.$message({
           message: response.message,
           type: (response.flag ? 'success' : 'error')
@@ -128,14 +133,14 @@ export default {
           this.fetchData() // 刷新列表
         }
       })
-      this.imageUrl=''
       this.dialogFormVisible = false // 关闭窗口
     },
     handleEdit(id) {
+      this.imageUrl =''
       this.id = id
       this.dialogFormVisible = true // 打开窗口
       if (id !== '') { // 修改
-        articleApi.findById(id).then(response => {
+        gatheringApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
             this.imageUrl = this.pojo.image
@@ -143,9 +148,7 @@ export default {
         })
       } else {
         this.pojo = {} // 清空数据
-        
       }
-      this.imageUrl = ''
     },
     handleDelete(id) {
       this.$confirm('确定要删除此纪录吗?', '提示', {
@@ -153,7 +156,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        articleApi.deleteById(id).then(response => {
+        gatheringApi.deleteById(id).then(response => {
           this.$message({ message: response.message, type: (response.flag ? 'success' : 'error') })
           if (response.flag) {
             this.fetchData() // 刷新数据
@@ -161,15 +164,19 @@ export default {
         })
       })
     },
-    showDetail(index){
-      this.pojo = index
-      this.dialogDetailVisible = true
+    handChangePage(topage){
+      this.currentPage = topage
+      this.fetchData()
+    },
+    handleChangeSize(size){
+      this.pageSize = size
+      this.fetchData()
     },
     handleAvatarSuccess(res, file) {
         //this.imageUrl = URL.createObjectURL(file.raw);
         this.imageUrl = res.data
       console.log(this.imageUrl)
-      this.pojo.logo= this.imageUrl 
+      this.pojo.image= this.imageUrl 
       },
       beforeAvatarUpload(file) {
         const isJPG = (file.type === 'image/jpeg' || file.type === 'image/png');
@@ -182,15 +189,7 @@ export default {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
         return isJPG && isLt2M;
-      },
-      handChangePage(topage){
-      this.currentPage = topage
-      this.fetchData()
-    },
-    handleChangeSize(size){
-      this.pageSize = size
-      this.fetchData()
-    }
+      }
   }
 }
 </script>
