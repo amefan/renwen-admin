@@ -2,13 +2,13 @@
 <div>
   <br>
   <el-form :inline="true">
-          <el-form-item label="吐槽Id">
-<el-input v-model="searchMap.spitid" placeholder="吐槽Id"></el-input></el-form-item>
-          <el-form-item label="评论内容">
-<el-input v-model="searchMap.content" placeholder="评论内容"></el-input></el-form-item>
           <el-form-item label="用户id">
-<el-input v-model="searchMap.userid" placeholder="用户id"></el-input></el-form-item>
-          
+<el-input v-model="searchMap.userid" placeholder="userid"></el-input></el-form-item>
+          <el-form-item label="内容">
+<el-input v-model="searchMap.content" placeholder="content"></el-input></el-form-item>
+          <el-form-item label="用户名">
+<el-input v-model="searchMap.username" placeholder="username"></el-input></el-form-item>
+
     <el-button type="primary" @click="fetchData()">查询</el-button>
     <!-- <el-button type="primary" @click="handleEdit('')">新增</el-button> -->
   </el-form>
@@ -17,14 +17,17 @@
     border
     style="width: 100%">
           <el-table-column :show-overflow-tooltip="true" prop="id" label="id" width="120"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="spitid" label="吐槽Id" width="120"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="content" label="评论内容" width="120"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="userid" label="用户id" width="120"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="nickname" label="昵称" width="80"></el-table-column>
-          <!-- <el-table-column :show-overflow-tooltip="true" prop="parentid" label="0为顶级评论" width="80"></el-table-column> -->
-          <el-table-column :show-overflow-tooltip="true" prop="publishdate" label="发布日期" width="120"></el-table-column>
-
-    <el-table-column
+          <el-table-column :show-overflow-tooltip="true" prop="content" label="内容" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="imgs" label="图片" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="visits" label="浏览数" width="80"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="thumbup" label="点赞数" width="80"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="comment" label="评论数" width="80"></el-table-column>
+          <!-- <el-table-column :show-overflow-tooltip="true" prop="state" label="state" width="80"></el-table-column> -->
+          <el-table-column :show-overflow-tooltip="true" prop="publishtime" label="发布时间" width="120"></el-table-column>
+          <!-- <el-table-column :show-overflow-tooltip="true" prop="avatar" label="avatar" width="80"></el-table-column> -->
+          <el-table-column :show-overflow-tooltip="true" prop="username" label="发布人" width="80"></el-table-column>
+<el-table-column
       
       label="操作"
       width="160">
@@ -45,12 +48,14 @@
     </el-pagination>  
   <el-dialog title="编辑" :visible.sync="dialogFormVisible">
     <el-form label-width="80px">
-        <el-form-item label="吐槽Id"><el-input v-model="pojo.spitid"></el-input></el-form-item>
-        <el-form-item label="评论内容"><el-input v-model="pojo.content"></el-input></el-form-item>
-        <el-form-item label="用户id"><el-input v-model="pojo.userid"></el-input></el-form-item>
-        <el-form-item label="昵称"><el-input v-model="pojo.nickname"></el-input></el-form-item>
-        <el-form-item label="0为顶级评论"><el-input v-model="pojo.parentid"></el-input></el-form-item>
-        <el-form-item label="发布日期"><el-input v-model="pojo.publishdate"></el-input></el-form-item>
+        <el-form-item label="发布人ID"><el-input v-model="pojo.userid"></el-input></el-form-item>
+        <el-form-item label="内容"><el-input v-model="pojo.content"></el-input></el-form-item>
+        <el-form-item label="文章配图"><el-input v-model="pojo.imgs"></el-input></el-form-item>
+        <el-form-item label="浏览数"><el-input v-model="pojo.visits"></el-input></el-form-item>
+        <el-form-item label="点赞数"><el-input v-model="pojo.thumbup"></el-input></el-form-item>
+        <el-form-item label="评论数"><el-input v-model="pojo.comment"></el-input></el-form-item>
+        <el-form-item label="发布时间"><el-input v-model="pojo.publishtime"></el-input></el-form-item>
+        <el-form-item label="发布人名字"><el-input v-model="pojo.username"></el-input></el-form-item>
 
         <el-button type="primary" @click="handleSave()">保存</el-button>
         <el-button @click="dialogFormVisible = false" >关闭</el-button>
@@ -59,7 +64,7 @@
 </div>
 </template>
 <script>
-import commentApi from '@/api/spitcomment'
+import shareApi from '@/api/share'
 export default {
   data() {
     return {
@@ -79,13 +84,14 @@ export default {
   },
   methods: {
     fetchData() {
-      commentApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
+      shareApi.search(this.currentPage, this.pageSize, this.searchMap).then(response => {
         this.list = response.data.rows
+        console.log(this.list)
         this.total = response.data.total
       })
     },
     handleSave() {
-      commentApi.update(this.id, this.pojo).then(response => {
+      shareApi.update(this.id, this.pojo).then(response => {
         this.$message({
           message: response.message,
           type: (response.flag ? 'success' : 'error')
@@ -100,7 +106,7 @@ export default {
       this.id = id
       this.dialogFormVisible = true // 打开窗口
       if (id !== '') { // 修改
-        commentApi.findById(id).then(response => {
+        shareApi.findById(id).then(response => {
           if (response.flag) {
             this.pojo = response.data
           }
@@ -115,7 +121,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        commentApi.deleteById(id).then(response => {
+        shareApi.deleteById(id).then(response => {
           this.$message({ message: response.message, type: (response.flag ? 'success' : 'error') })
           if (response.flag) {
             this.fetchData() // 刷新数据

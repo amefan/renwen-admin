@@ -53,7 +53,7 @@ export const constantRouterMap = [
       {
         path: 'tree',
         name: 'Tree',
-        component: () => import('@/views/tree/index'),
+        component: () => import('@/views/table/user'),
         meta: { title: '用户列表', icon: 'user' }
       }
     ]
@@ -67,21 +67,21 @@ export const constantRouterMap = [
         path: 'table',
         name: 'Table',
         component: () => import('@/views/nested/menu1/index'),
-        meta: { title: '文章审核', icon: 'table' },
+        meta: { title: '文章管理', icon: 'table' },
         children:[
           { 
             path: 'article',
-            component: () => import('@/views/table/article'),
+            component: () => import('@/views/table/share'),
             name: 'article',
-            meta: { title: '已审核文章' ,icon:'form' }
+            meta: { title: '文章列表' ,icon:'form' }
           },
-          {
-            path: 'toarticle',
-            component: () => import('@/views/table/toarticle'),
-            name: 'toarticle',
-            meta: { title: '待审核文章' ,icon:'form' },
+          // {
+          //   path: 'toarticle',
+          //   component: () => import('@/views/table/toarticle'),
+          //   name: 'toarticle',
+          //   meta: { title: '待审核文章' ,icon:'form' },
             
-          }
+          // }
         ]
       },
       {
@@ -127,7 +127,7 @@ export const constantRouterMap = [
         path: 'confession',
         name: 'Form',
         component: () => import('@/views/table/confession'),
-        meta: { title: '表名列表', icon: 'form' }
+        meta: { title: '表白信息列表', icon: 'form' }
       },
       {
         path: 'spitcomment',

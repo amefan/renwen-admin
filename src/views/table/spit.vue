@@ -6,8 +6,6 @@
 <el-input v-model="searchMap.userid" placeholder="发布人Id"></el-input></el-form-item>
           <el-form-item label="发布人昵称">
 <el-input v-model="searchMap.nickname" placeholder="发布人昵称"></el-input></el-form-item>
-          <el-form-item label="'1'可见，'0'不可见">
-<el-input v-model="searchMap.state" placeholder="'1'可见，'0'不可见"></el-input></el-form-item>
           
     <el-button type="primary" @click="fetchData()">查询</el-button>
     <el-button type="primary" @click="handleEdit('')">新增</el-button>
@@ -24,9 +22,7 @@
           <el-table-column :show-overflow-tooltip="true" prop="visits" label="浏览数" width="80"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="thumbup" label="点赞数" width="80"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="comment" label="评论数" width="80"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="state" label="是否可见" width="80"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="parentid" label="上级Id" width="120"></el-table-column>
-
+          
     <el-table-column
       fixed="right"
       label="操作"

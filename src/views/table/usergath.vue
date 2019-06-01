@@ -12,15 +12,15 @@
          
     <el-button type="primary" @click="fetchData()">查询</el-button>
     <el-button type="primary" @click="handleEdit('')">新增</el-button>
+    <el-button type="primary" @click="importCvs()">导出</el-button>
   </el-form>
   <el-table
     :data="list"
     border
-    style="width: 100%">
+    style="width: 100%" id="out-table">
           <el-table-column :show-overflow-tooltip="true" prop="id" label="编号" width="130"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="userid" label="用户Id" width="130"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="gathid" label="活动ID" width="130"></el-table-column>
-          <el-table-column :show-overflow-tooltip="true" prop="nickname" label="昵称" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="nickname" label="姓名" width="120"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="qq" label="QQ" width="120"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="phone" label="电话号码" width="120"></el-table-column>
           <el-table-column :show-overflow-tooltip="true" prop="exetime" label="报名时间" width="160"></el-table-column>
@@ -51,7 +51,7 @@
         
         <el-form-item label="活动ID"><el-input v-model="pojo.gathid"></el-input></el-form-item>
         
-        <el-form-item label="昵称"><el-input v-model="pojo.nickname"></el-input></el-form-item>
+        <el-form-item label="姓名"><el-input v-model="pojo.nickname"></el-input></el-form-item>
         <el-form-item label="QQ"><el-input v-model="pojo.qq"></el-input></el-form-item>
         <el-form-item label="phone"><el-input v-model="pojo.phone"></el-input></el-form-item>
         <el-form-item label="报名时间"><el-input v-model="pojo.exetime"></el-input></el-form-item>
@@ -65,6 +65,8 @@
 </template>
 <script>
 import gatheringApi from '@/api/usergath'
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 export default {
   data() {
     return {
@@ -138,6 +140,17 @@ export default {
      handleChangeSize(size){
       this.pageSize = size
       this.fetchData()
+    },
+    importCvs(){
+          /* generate workbook object from table */
+         var wb = XLSX.utils.table_to_book(document.querySelector('#out-table'))
+         /* get binary string as output */
+         var wbout = XLSX.write(wb, { bookType: 'xlsx', bookSST: true, type: 'array' })
+         try {
+             FileSaver.saveAs(new Blob([wbout], { type: 'application/octet-stream' }), 'sheetjs.xlsx')
+         } catch (e) { if (typeof console !== 'undefined') console.log(e, wbout) }
+         return wbout
+
     }
   }
 }

@@ -6,7 +6,7 @@
 <el-input v-model="searchMap.userid" placeholder="用户ID"></el-input></el-form-item>
           <el-form-item label="标题">
 <el-input v-model="searchMap.title" placeholder="标题"></el-input></el-form-item>
-            <el-form-item label="发布日期" >
+          <el-form-item label="发布日期" >
             <el-date-picker  type="date" placeholder="选择开始日期" value-format="yyyy-MM-dd" v-model="searchMap.starttime_1" ></el-date-picker>
             <el-date-picker  type="date" placeholder="选择截止日期" value-format="yyyy-MM-dd" v-model="searchMap.starttime_2" ></el-date-picker>
           </el-form-item>

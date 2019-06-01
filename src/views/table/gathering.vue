@@ -6,11 +6,11 @@
 <el-input v-model="searchMap.name" placeholder="活动名称"></el-input></el-form-item>
            <el-form-item label="主办方">
 <el-input v-model="searchMap.sponsor" placeholder="主办方"></el-input></el-form-item>
-         <el-form-item label="开始时间">
+         <!-- <el-form-item label="开始时间">
 <el-input v-model="searchMap.starttime" placeholder="开始时间"></el-input></el-form-item>
           <el-form-item label="截止时间">
 <el-input v-model="searchMap.endtime" placeholder="截止时间"></el-input></el-form-item>
-          <el-form-item label="是否可见">
+        -->  <el-form-item label="是否可见"> 
     <el-select v-model="searchMap.state" placeholder="请选择">
       <el-option label="可见" value="1"></el-option>
       <el-option label="不可见" value="0"></el-option>
@@ -62,7 +62,7 @@
   <el-dialog title="编辑" :visible.sync="dialogFormVisible">
     <el-form label-width="80px">
         <el-form-item label="活动名称"><el-input v-model="pojo.name"></el-input></el-form-item>
-        <el-form-item label="活动形式">
+        <el-form-item label="活动内容">
           <el-input type="textarea" :rows="3" v-model="pojo.detail"></el-input>
         </el-form-item>
         <el-form-item label="主办方"><el-input v-model="pojo.sponsor"></el-input></el-form-item>
@@ -77,10 +77,31 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         </el-form-item>
-        <el-form-item label="开始时间"><el-input v-model="pojo.starttime"></el-input></el-form-item>
-        <el-form-item label="截止时间"><el-input v-model="pojo.endtime"></el-input></el-form-item>
+        <el-form-item label="开始时间">
+          <el-date-picker
+      v-model="pojo.starttime"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm:ss"
+      placeholder="选择开始时间">
+       </el-date-picker>
+   </el-form-item>
+        <el-form-item label="截止时间">
+          <el-date-picker
+      v-model="pojo.endtime"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm:ss"
+      placeholder="选择开始时间">
+          </el-date-picker>
+   </el-form-item>
         <el-form-item label="举办地点"><el-input v-model="pojo.address"></el-input></el-form-item>
-        <el-form-item label="报名截止"><el-input v-model="pojo.enrolltime"></el-input></el-form-item>
+        <el-form-item label="报名截止">
+           <el-date-picker
+      v-model="pojo.enrolltime"
+      type="datetime"
+      value-format="yyyy-MM-dd HH:mm:ss"
+      placeholder="选择开始时间">
+       </el-date-picker>
+        </el-form-item>
         <el-form-item label="是否可见">
          <el-switch
           v-model="pojo.state"
@@ -110,7 +131,8 @@ export default {
       dialogFormVisible: false, // 编辑窗口是否可见
       pojo: {}, // 编辑表单绑定的实体对象
       cityList: [], // 城市列表
-      id: '' // 当前用户修改的ID
+      id: '', // 当前用户修改的ID
+      imageUrl: ''
     }
   },
   created() {

@@ -4,13 +4,9 @@
   <el-form :inline="true">
           <el-form-item label="内容">
 <el-input v-model="searchMap.content" placeholder="内容"></el-input></el-form-item>
-          <el-form-item label="发布时间">
-<el-input v-model="searchMap.publishtime" placeholder="发布时间"></el-input></el-form-item>
           <el-form-item label="发布人Id">
 <el-input v-model="searchMap.userid" placeholder="发布人Id"></el-input></el-form-item>
-          <el-form-item label="1 可见，0不可见">
-<el-input v-model="searchMap.state" placeholder="1 可见，0不可见"></el-input></el-form-item>
-
+         
     <el-button type="primary" @click="fetchData()">查询</el-button>
     <el-button type="primary" @click="handleEdit('')">新增</el-button>
   </el-form>
@@ -18,19 +14,19 @@
     :data="list"
     border
     style="width: 100%">
-          <el-table-column prop="id" label="主键" width="80"></el-table-column>
-          <el-table-column prop="content" label="内容" width="80"></el-table-column>
-          <el-table-column prop="publishtime" label="发布时间" width="80"></el-table-column>
-          <el-table-column prop="userid" label="发布人Id" width="80"></el-table-column>
-          <el-table-column prop="state" label="1 可见，0不可见" width="80"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="id" label="主键" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="content" label="内容" width="160"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="publishtime" label="发布时间" width="120"></el-table-column>
+          <el-table-column :show-overflow-tooltip="true" prop="userid" label="发布人Id" width="120"></el-table-column>
+          <!-- <el-table-column prop="state" label="1 可见，0不可见" width="80"></el-table-column> -->
 
     <el-table-column
-      fixed="right"
+      
       label="操作"
-      width="100">
+      width="160">
       <template slot-scope="scope">
-        <el-button @click="handleEdit(scope.row.id)" type="text" size="small">修改</el-button>
-        <el-button @click="handleDelete(scope.row.id)" type="text" size="small">删除</el-button>
+        <el-button @click="handleEdit(scope.row.id)"  size="mini">修改</el-button>
+        <el-button @click="handleDelete(scope.row.id)" type="danger" size="mini">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
